@@ -1,0 +1,51 @@
+package behavioral;
+
+import java.util.Observable;
+import java.util.Observer;
+
+/**
+ * A simple demo of Observable->Observer
+ * Note that the actual Observer and Observable types are deprecated as of Java 9;
+ * see the ObserverPropChangeListenerDemo instead of this class.
+ * @author Ian Darwin
+ */
+@SuppressWarnings("deprecation")
+public class ObserverDemo extends Object {
+	MyView view;
+	MyModel model;
+
+	public ObserverDemo() {
+
+		view = new MyView();
+		model = new MyModel(); 
+		model.addObserver(view);
+	}
+
+	public static void main(String[] av) {
+		ObserverDemo me = new ObserverDemo();
+		me.runTheMainApplication();
+	}
+
+	/** Represents the main part of an application */
+	public void runTheMainApplication() {
+		model.changeSomething();
+	}
+
+	/** The Observer normally maintains a view on the data */
+	class MyView implements Observer {
+		/** For now, we just print the fact that we got notified. */
+		@Override
+		public void update( Observable obs, Object x ) {
+			System.out.println("update(" + obs + "," + x + ");");
+		}
+	}
+
+	/** The Observable normally maintains the data */
+	class MyModel extends Observable {
+		public void changeSomething() {
+			// Notify observers of change
+			setChanged();
+			notifyObservers();
+		}
+	}
+}
